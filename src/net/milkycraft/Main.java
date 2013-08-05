@@ -1,9 +1,14 @@
 package net.milkycraft;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
+
 public class Main {
 	private Config config = new Config();
 	private java.util.Timer u = new java.util.Timer(true);
-	protected java.awt.Image[] cache;
+	public java.awt.Image[] cache;
 	public static Main m;
 
 	public static void main(String[] args) {
@@ -21,14 +26,23 @@ public class Main {
 				debug("Config not found, generating and then loading");
 				ConfigUtility.saveDefault();
 				ConfigUtility.loadConfig(config);
-			}			
+			}
 		} catch (Exception e) {
 			Utility.log(e);
 		}
 	}
-	
+
 	public void launch() {
 		int a = config.getPreload();
+		int z = config.getFontSize();
+		if(a <= 0 || a >= 5000) {
+			Utility.log(new RuntimeException("Preload size too large, would result in large ram usage"));
+		}
+		if(z < 5) {
+			Utility.log(new RuntimeException("Font size too small, try atleast 5"));
+		} else if(z > 150) {
+			Utility.log(new RuntimeException("Font size too big, try under 150 (Large font = more memory usage)"));
+		}
 		cache = new java.awt.Image[a + 3];
 		for (int i = 0; i < a; i++) {
 			cache[i] = Utility.getImage(String.valueOf(i));
@@ -39,7 +53,7 @@ public class Main {
 		debug("Starting process");
 		start(config);
 	}
-	
+
 	private void debug(String i) {
 		System.out.println(i);
 	}
@@ -56,7 +70,7 @@ public class Main {
 		stop();
 		u = new java.util.Timer(true);
 		start(c);
-		Utility.update(0);
+		Utility.update();
 	}
 
 	private void start(Config c) {
@@ -65,11 +79,11 @@ public class Main {
 
 			@Override
 			public void run() {
-				if(UpdateCheck.needsUpdate()) {
+				if (UpdateCheck.needsUpdate()) {
 					System.out.println("Update found");
 				}
 			}
-			
+
 		}, 5000, 300000);
 	}
 

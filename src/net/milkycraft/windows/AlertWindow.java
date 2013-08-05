@@ -19,7 +19,6 @@ public class AlertWindow extends JDialog {
 
 	public AlertWindow() {
 		setAlwaysOnTop(true);
-		setTitle("Update alert");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setVisible(true);
 		setBounds(100, 100, 450, 300);
@@ -51,5 +50,9 @@ public class AlertWindow extends JDialog {
 		textArea.append("Current version: " + remote + "\n");
 		textArea.append("Changes: " + readme + "\n");
 		textArea.append("Download: " + url);
+	}
+	
+	public JTextArea getTextArea() {
+		return textArea;
 	}
 }

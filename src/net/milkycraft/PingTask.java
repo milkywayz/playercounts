@@ -21,16 +21,14 @@ public class PingTask extends TimerTask {
 	public void run() {
 		try {
 			if (c.getPingMode().equalsIgnoreCase("Custom")) {
-				final Socket socket = new Socket();
+				Socket socket = new Socket();
 				socket.connect(new InetSocketAddress(c.getAddress(), c.getPort()), 3000);
-				final DataInputStream in = new DataInputStream(socket.getInputStream());
-				int count = in.read();
-				Utility.setTray(count);
+				DataInputStream in = new DataInputStream(socket.getInputStream());
+				Utility.setTray(in.read());
 			} else {
 				MinecraftPingReply mpr = ping.getPing(c.getAddress(), c.getPort());
 				Utility.setTray(mpr.getOnlinePlayers());
 			}
-
 		} catch (Exception e) {
 			Utility.log(e);
 			try {
@@ -41,5 +39,4 @@ public class PingTask extends TimerTask {
 			}
 		}
 	}
-
 }
